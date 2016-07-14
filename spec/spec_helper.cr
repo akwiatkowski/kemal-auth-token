@@ -1,2 +1,2 @@
 require "spec"
-require "../src/kemal-auth-token"
+require "../src/kemal-auth"
