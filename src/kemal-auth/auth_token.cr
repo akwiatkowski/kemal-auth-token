@@ -26,18 +26,8 @@ class Kemal::AuthToken < HTTP::Handler
     @load_user = block
   end
 
-  #
-  # &@load_user : String -> UserHash)
-
-  # def initialize(
-  #   @secret_key = SecureRandom.hex,
-  #   @algorithm = "HS256",
-  #   @path = "/sign_in",
-  #   &@sign_in : String, String -> UserHash)
-  # end
-  # # &@load_user : String -> UserHash)
-
   getter :secret_key, :algorithm
+  property :path
 
   def call(context)
     # sign_in

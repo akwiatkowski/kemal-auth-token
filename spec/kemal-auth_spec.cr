@@ -51,10 +51,6 @@ end
 describe Kemal::Auth do
   it "works" do
 
-    user_id = 1
-
-    sign_in_proc = ->(email : String, password : String) { User.sign_in(email, password) }
-
     # auth_token_mw = Kemal::AuthToken.new(sign_in: sign_in_proc)
     auth_token_mw = Kemal::AuthToken.new
     auth_token_mw.sign_in do |email, password|
