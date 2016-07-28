@@ -5,12 +5,13 @@ require "./spec_helper"
 
 $SIGNED_EMAIL = "signed@email.org"
 $SIGNED_PASSWORD = "hard_password"
+$SIGNED_ID = 3
 
 struct User
-  @id : (Nil | Int32) = 1
-  @name : (String | Int32) = "Jon Boe"
-  @email : (Nil | String) = "email@email.org"
-  @password : (Nil | String) = "password"
+  @id : (Nil | Int32) = nil # 1
+  @name : (Nil | Int32) = nil # "Jon Boe"
+  @email : (Nil | String) = nil # "email@email.org"
+  @password : (Nil | String) = nil # "password"
 
   property :id, :name, :email, :password
 
@@ -20,10 +21,9 @@ struct User
   def self.sign_in(email : String, password : String) : UserHash
     h = UserHash.new
 
-
     if email == $SIGNED_EMAIL && $SIGNED_PASSWORD == $SIGNED_PASSWORD
       h["email"] = $SIGNED_EMAIL
-      h["id"] = 1
+      h["id"] = $SIGNED_ID
 
       return h
     else
@@ -31,6 +31,19 @@ struct User
 
       return h
     end
+  end
+
+  def self.load_user(user : Hash) : UserHash
+    u = UserHash.new
+    id = user["id"].to_s
+
+    if id != ""
+      u["id"] = id.to_i
+      if u["id"] == $SIGNED_ID
+        u["email"] = $SIGNED_EMAIL
+      end
+    end
+    u
   end
 end
 
@@ -40,16 +53,22 @@ describe Kemal::Auth do
 
     user_id = 1
 
-    auth_token_mw = Kemal::AuthToken.new() do |email, password|
+    sign_in_proc = ->(email : String, password : String) { User.sign_in(email, password) }
+
+    # auth_token_mw = Kemal::AuthToken.new(sign_in: sign_in_proc)
+    auth_token_mw = Kemal::AuthToken.new
+    auth_token_mw.sign_in do |email, password|
       User.sign_in(email, password)
+    end
+    auth_token_mw.load_user do |user|
+      User.load_user(user)
     end
 
     Kemal.config.add_handler(auth_token_mw)
     Kemal.config.port = 8002
 
-    get "/" do |env|
-      puts env.class
-      "This won't render without correct username and password."
+    get "/current_user" do |env|
+      env.current_user.to_json
     end
 
     spawn do
@@ -64,17 +83,24 @@ describe Kemal::Auth do
     # sign in
     http = HTTP::Client.new("localhost", Kemal.config.port)
     result = http.post_form("/sign_in", {"email" => $SIGNED_EMAIL, "password" => $SIGNED_PASSWORD })
-    puts result.inspect
-
-
-    payload = { "user_id" => user_id }
-    token = JWT.encode(payload, auth_token_mw.secret_key, auth_token_mw.algorithm)
+    json = JSON.parse(result.body)
+    token = json["token"].to_s
 
     headers = HTTP::Headers.new
     headers["X-Token"] = token
 
+    # not signed request
     http = HTTP::Client.new("localhost", Kemal.config.port)
-    http.exec("GET", "/", headers)
+    result = http.exec("GET", "/current_user")
+    json = JSON.parse(result.body)
+    json["id"]?.should eq nil
+    json["email"]?.should eq nil
+
+    http = HTTP::Client.new("localhost", Kemal.config.port)
+    result = http.exec("GET", "/current_user", headers)
+    json = JSON.parse(result.body)
+    json["id"].should eq $SIGNED_ID
+    json["email"].should eq $SIGNED_EMAIL
 
   end
 end

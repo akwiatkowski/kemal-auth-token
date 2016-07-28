@@ -7,13 +7,35 @@ require "json"
 alias UserHash = Hash(String, (String | Int32 | Nil | Bool))
 
 class Kemal::AuthToken < HTTP::Handler
+
   def initialize(
     @secret_key = SecureRandom.hex,
     @algorithm = "HS256",
     @path = "/sign_in",
-    &@sign_in : String, String -> UserHash)
+    )
+
+    @sign_in = ->(email : String, password : String) { UserHash.new }
+    @load_user = ->(user : Hash(String, JSON::Type)) { UserHash.new }
   end
+
+  def sign_in(&block : String, String -> UserHash)
+    @sign_in = block
+  end
+
+  def load_user(&block : Hash(String, JSON::Type) -> UserHash)
+    @load_user = block
+  end
+
+  #
   # &@load_user : String -> UserHash)
+
+  # def initialize(
+  #   @secret_key = SecureRandom.hex,
+  #   @algorithm = "HS256",
+  #   @path = "/sign_in",
+  #   &@sign_in : String, String -> UserHash)
+  # end
+  # # &@load_user : String -> UserHash)
 
   getter :secret_key, :algorithm
 
@@ -35,9 +57,8 @@ class Kemal::AuthToken < HTTP::Handler
     if context.request.headers["X-Token"]?
       token = context.request.headers["X-Token"]
       payload, header = JWT.decode(token, @secret_key, @algorithm)
-      puts payload.class
-      puts header.class
-      puts payload.inspect, header.inspect
+      payload
+      context.current_user = @load_user.call(payload)
     end
     call_next context
   end
