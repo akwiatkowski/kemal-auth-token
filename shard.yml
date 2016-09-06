@@ -1,5 +1,5 @@
 name: kemal-auth-token
-version: 0.1.0
+version: 0.2.0
 
 authors:
   - Aleksander Kwiatkowski <bobikx@poczta.fm>
@@ -8,6 +8,7 @@ dependencies:
   kemal:
     github: "sdogruyol/kemal"
   jwt:
-    github: greyblake/crystal-jwt
-    
+    github: akwiatkowski/crystal-jwt
+    commit: f0bf2608dc6a38362c686cb47b2f52a67672c495
+
 license: MIT

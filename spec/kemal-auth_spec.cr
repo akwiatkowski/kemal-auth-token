@@ -3,9 +3,9 @@ require "./spec_helper"
 # Let's define fake User object
 # Normally you want to have access to DB
 
-$SIGNED_EMAIL = "signed@email.org"
-$SIGNED_PASSWORD = "hard_password"
-$SIGNED_ID = 3
+SIGNED_EMAIL = "signed@email.org"
+SIGNED_PASSWORD = "hard_password"
+SIGNED_ID = 3
 
 struct User
   @id : (Nil | Int32) = nil # 1
@@ -21,9 +21,9 @@ struct User
   def self.sign_in(email : String, password : String) : UserHash
     h = UserHash.new
 
-    if email == $SIGNED_EMAIL && $SIGNED_PASSWORD == $SIGNED_PASSWORD
-      h["email"] = $SIGNED_EMAIL
-      h["id"] = $SIGNED_ID
+    if email == SIGNED_EMAIL && SIGNED_PASSWORD == SIGNED_PASSWORD
+      h["email"] = SIGNED_EMAIL
+      h["id"] = SIGNED_ID
 
       return h
     else
@@ -39,8 +39,8 @@ struct User
 
     if id != ""
       u["id"] = id.to_i
-      if u["id"] == $SIGNED_ID
-        u["email"] = $SIGNED_EMAIL
+      if u["id"] == SIGNED_ID
+        u["email"] = SIGNED_EMAIL
       end
     end
     u
@@ -78,7 +78,7 @@ describe Kemal::Auth do
 
     # sign in
     http = HTTP::Client.new("localhost", Kemal.config.port)
-    result = http.post_form("/sign_in", {"email" => $SIGNED_EMAIL, "password" => $SIGNED_PASSWORD })
+    result = http.post_form("/sign_in", {"email" => SIGNED_EMAIL, "password" => SIGNED_PASSWORD })
     json = JSON.parse(result.body)
     token = json["token"].to_s
 
@@ -95,8 +95,8 @@ describe Kemal::Auth do
     http = HTTP::Client.new("localhost", Kemal.config.port)
     result = http.exec("GET", "/current_user", headers)
     json = JSON.parse(result.body)
-    json["id"].should eq $SIGNED_ID
-    json["email"].should eq $SIGNED_EMAIL
+    json["id"].should eq SIGNED_ID
+    json["email"].should eq SIGNED_EMAIL
 
   end
 end
