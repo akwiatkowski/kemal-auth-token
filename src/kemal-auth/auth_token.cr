@@ -6,7 +6,8 @@ require "json"
 # Signed user is stored as a Hash
 alias UserHash = Hash(String, (String | Int32 | Nil | Bool))
 
-class Kemal::AuthToken < HTTP::Handler
+class Kemal::AuthToken
+  include HTTP::Handler
 
   def initialize(
     @secret_key = SecureRandom.hex,
