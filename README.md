@@ -82,7 +82,7 @@ auth_token_mw.load_user do |jwt_payload|
 end
 ```
 
-Keep in mind that `jwt_payload` is `Hash(String, JSON::Type)`.
+Keep in mind that `jwt_payload` is `Hash(String, JSON::Any)`.
 
 You need to provide way to get user information from object (`UserHash`) stored in
 JWT token here. That information should be presented also as `UserHash`.
