@@ -6,9 +6,11 @@ authors:
 
 dependencies:
   kemal:
-    github: "sdogruyol/kemal"
+    github: kemalcr/kemal
   jwt:
-    github: akwiatkowski/crystal-jwt
-    commit: f0bf2608dc6a38362c686cb47b2f52a67672c495
+    github: crystal-community/jwt
+#   jwt:
+#     github: akwiatkowski/crystal-jwt
+#     commit: f0bf2608dc6a38362c686cb47b2f52a67672c495
 
 license: MIT

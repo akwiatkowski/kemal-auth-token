@@ -1,5 +1,4 @@
 require "kemal"
-require "secure_random"
 require "jwt"
 require "json"
 
@@ -10,20 +9,20 @@ class Kemal::AuthToken
   include HTTP::Handler
 
   def initialize(
-    @secret_key = SecureRandom.hex,
+    @secret_key = Random::Secure.hex,
     @algorithm = "HS256",
     @path = "/sign_in",
     )
 
     @sign_in = ->(email : String, password : String) { UserHash.new }
-    @load_user = ->(user : Hash(String, JSON::Type)) { UserHash.new }
+    @load_user = ->(user : Hash(String, JSON::Any)) { UserHash.new }
   end
 
   def sign_in(&block : String, String -> UserHash)
     @sign_in = block
   end
 
-  def load_user(&block : Hash(String, JSON::Type) -> UserHash)
+  def load_user(&block : Hash(String, JSON::Any) -> UserHash)
     @load_user = block
   end
 

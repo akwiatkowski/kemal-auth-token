@@ -78,7 +78,7 @@ describe Kemal::Auth do
 
     # sign in
     http = HTTP::Client.new("localhost", Kemal.config.port)
-    result = http.post_form("/sign_in", {"email" => SIGNED_EMAIL, "password" => SIGNED_PASSWORD })
+    result = http.post "/sign_in", form: {"email" => SIGNED_EMAIL, "password" => SIGNED_PASSWORD }
     json = JSON.parse(result.body)
     token = json["token"].to_s
 
