@@ -4,11 +4,19 @@ version: 0.2.0
 authors:
   - Aleksander Kwiatkowski <bobikx@poczta.fm>
 
+targets:
+  kemal-auth-token:
+    main: src/kemal-auth-token.cr
+
+crystal: 0.27.0
+
 dependencies:
   kemal:
-    github: "sdogruyol/kemal"
+    github: kemalcr/kemal
   jwt:
-    github: akwiatkowski/crystal-jwt
-    commit: f0bf2608dc6a38362c686cb47b2f52a67672c495
+    github: crystal-community/jwt
+#   jwt:
+#     github: akwiatkowski/crystal-jwt
+#     commit: f0bf2608dc6a38362c686cb47b2f52a67672c495
 
 license: MIT
