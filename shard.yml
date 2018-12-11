@@ -6,7 +6,7 @@ authors:
 
 targets:
   kemal-auth-token:
-    main: src/kemal-auth.cr
+    main: src/kemal-auth-token.cr
 
 crystal: 0.27.0
 
