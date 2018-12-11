@@ -4,6 +4,10 @@ version: 0.2.0
 authors:
   - Aleksander Kwiatkowski <bobikx@poczta.fm>
 
+target:
+  kemal-auth-token:
+    main: src/kemal-auth.cr
+
 dependencies:
   kemal:
     github: kemalcr/kemal
