@@ -1,4 +1,3 @@
-require "./kemal-auth/version"
-
-require "./kemal-auth/auth_token"
-require "./kemal-auth/context"
+require "./kemal-auth-token/version"
+require "./kemal-auth-token/auth_token"
+require "./kemal-auth-token/context"
