@@ -114,4 +114,3 @@ TODO: Write development instructions here
 ## Contributors
 
 - [akwiatkowski](https://github.com/akwiatkowski) Aleksander Kwiatkowski - creator, maintainer
-- [dscottboggs](https://github.com/dscottboggs) D. Scott Boggs - contributor
